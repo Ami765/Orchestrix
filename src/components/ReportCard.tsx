@@ -1,6 +1,7 @@
 import React from "react";
 import { Report } from "../types";
 import { AlertTriangle, ShieldCheck, HelpCircle, FileDown } from "lucide-react";
+import { downloadReportAsFile } from "../utils/reportDownloader";
 
 interface ReportCardProps {
   key?: React.Key;
@@ -51,14 +52,42 @@ export default function ReportCard({ report, onSelect }: ReportCardProps) {
         </p>
       </div>
 
-      <div className="px-4 pb-4 pt-2 border-t border-white/5 flex items-center justify-between">
+      <div className="px-4 pb-4 pt-2 border-t border-white/5 flex items-center justify-between" id={`report-card-footer-${report.id}`}>
         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold flex items-center gap-1 ${badgeColor}`}>
           {icon}
           {report.riskRating} Risk
         </span>
-        <span className="text-[10px] text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full font-mono">
-          {report.status}
-        </span>
+        
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-1 border border-white/5 bg-white/[0.01] rounded-lg p-0.5">
+            <button
+              onClick={() => downloadReportAsFile(report, "txt")}
+              title="Download Plain Text (.txt)"
+              className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold text-gray-400 hover:text-white hover:bg-indigo-600/30 transition-all cursor-pointer"
+            >
+              TXT
+            </button>
+            <span className="text-white/10 text-[9px]">|</span>
+            <button
+              onClick={() => downloadReportAsFile(report, "md")}
+              title="Download Markdown (.md)"
+              className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold text-gray-400 hover:text-white hover:bg-violet-600/30 transition-all cursor-pointer"
+            >
+              MD
+            </button>
+            <span className="text-white/10 text-[9px]">|</span>
+            <button
+              onClick={() => downloadReportAsFile(report, "pdf")}
+              title="Print / Save PDF (.pdf)"
+              className="px-1 py-0.5 rounded text-gray-400 hover:text-white hover:bg-cyan-600/30 transition-all cursor-pointer flex items-center justify-center"
+            >
+              <FileDown className="w-3 h-3" />
+            </button>
+          </div>
+          <span className="text-[10px] text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full font-mono">
+            {report.status}
+          </span>
+        </div>
       </div>
     </div>
   );

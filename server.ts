@@ -1,11 +1,6 @@
-// import { startServer } from "./server/app";
+import { startServer } from "./server/app";
 
-// startServer().catch((err) => {
-//   console.error("Critical: Failed to start multi-tier Express backend:", err);
-//   process.exit(1);
-// });
-import { app } from "./server/app";
-
-// Vercel serverless entrypoint export
-export default app;
-
+startServer().catch((err) => {
+  console.error("Critical: Failed to start multi-tier Express backend:", err);
+  process.exit(1);
+});

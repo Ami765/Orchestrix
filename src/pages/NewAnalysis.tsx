@@ -53,14 +53,17 @@ export default function NewAnalysis() {
     }
   };
 
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
   // Dispatch starting sequence
   const handleStartAnalysis = async () => {
+    setErrorMessage(null);
     const defaultText = analysisTab === "paste" 
       ? analysisText 
       : `File contents of uploaded items: ${uploadedFiles.map(f => f.name).join(", ")}. Standard financial leverage of 3.8x, Q2 growth rate targets met. Steady revenue.`;
 
     if (!defaultText.trim()) {
-      alert("Please provide some source text or upload files to analyze.");
+      setErrorMessage("Please provide some source text or upload files to analyze before launching.");
       return;
     }
 
@@ -75,7 +78,7 @@ export default function NewAnalysis() {
       navigate("/agents");
     } catch (err) {
       console.error("Error dispatching swarm:", err);
-      alert("Error dispatching swarm analysis pipeline.");
+      setErrorMessage("Failed to dispatch the specialty agent swarm analysis pipeline.");
     }
   };
 
@@ -85,6 +88,21 @@ export default function NewAnalysis() {
         <h1 className="text-xl font-display font-bold text-white">Swarm Diligence Portal</h1>
         <p className="text-xs text-gray-400 mt-1">Submit source files, select reference parameters, and deploy the specialty agent swarm.</p>
       </div>
+
+      {errorMessage && (
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs px-4 py-3 rounded-xl flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+            <span>{errorMessage}</span>
+          </div>
+          <button 
+            onClick={() => setErrorMessage(null)}
+            className="text-gray-400 hover:text-white font-bold ml-4 cursor-pointer text-xs"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 cols: inputs */}

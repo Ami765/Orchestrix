@@ -11,12 +11,24 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
     },
   });
 
+  const contentType = res.headers.get("content-type") || "";
+
   if (!res.ok) {
     const errorMsg = await res.text().catch(() => "Unknown error");
     throw new Error(`API Error on ${path}: ${res.statusText} (${errorMsg})`);
   }
 
-  return res.json();
+  // Detect HTML fallback (e.g. Vercel SPA routing returning index.html for /api routes)
+  if (contentType.includes("text/html")) {
+    throw new Error(`STATIC_FALLBACK: Endpoint ${path} returned HTML instead of JSON`);
+  }
+
+  const rawText = await res.text();
+  if (rawText.trim().startsWith("<")) {
+    throw new Error(`STATIC_FALLBACK: Endpoint ${path} returned HTML document`);
+  }
+
+  return JSON.parse(rawText) as T;
 }
 
 export const client = {

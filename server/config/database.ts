@@ -22,36 +22,19 @@ export class PostgreSQLPool {
     return PostgreSQLPool.instance;
   }
 
-  // private connect() {
-  //   if (fs.existsSync(DB_FILE)) {
-  //     try {
-  //       const data = fs.readFileSync(DB_FILE, "utf-8");
-  //       this.memoryDb = JSON.parse(data);
-  //       console.log("PostgreSQL Pool: Successfully connected to persistent data store (db.json)");
-  //       return;
-  //     } catch (e) {
-  //       console.error("PostgreSQL Pool: Connection failure, corrupt DB file, restoring defaults.", e);
-  //     }
-  //   }
-  //   this.seedDefaults();
-  // }  
   private connect() {
-    try {
-      if (fs.existsSync(DB_FILE)) {
+    if (fs.existsSync(DB_FILE)) {
+      try {
         const data = fs.readFileSync(DB_FILE, "utf-8");
         this.memoryDb = JSON.parse(data);
         console.log("PostgreSQL Pool: Successfully connected to persistent data store (db.json)");
         return;
+      } catch (e) {
+        console.error("PostgreSQL Pool: Connection failure, corrupt DB file, restoring defaults.", e);
       }
-    } catch (e) {
-      console.error("PostgreSQL Pool: Connection failure or missing DB file on cloud environment. Restoring defaults.", e);
     }
-    
-    // Force seeding if file read fails or doesn't exist in the Vercel path environment
-    console.log("PostgreSQL Pool: Seeding fallback database defaults for cloud session.");
     this.seedDefaults();
   }
-
 
   public get db(): DatabaseSchema {
     return this.memoryDb;
@@ -141,21 +124,7 @@ export class PostgreSQLPool {
     }
   }
 
-  // public save() {
-  //   try {
-  //     const tmpFile = `${DB_FILE}.tmp`;
-  //     fs.writeFileSync(tmpFile, JSON.stringify(this.memoryDb, null, 2), "utf-8");
-  //     fs.renameSync(tmpFile, DB_FILE);
-  //   } catch (e) {
-  //     console.error("PostgreSQL Pool: Atomic file synchronization failed:", e);
-  //   }
-  // }
-    public save() {
-    if (process.env.VERCEL) {
-      console.log("PostgreSQL Pool: Running on Vercel, bypassing local file sync.");
-      return;
-    }
-
+  public save() {
     try {
       const tmpFile = `${DB_FILE}.tmp`;
       fs.writeFileSync(tmpFile, JSON.stringify(this.memoryDb, null, 2), "utf-8");
@@ -164,7 +133,6 @@ export class PostgreSQLPool {
       console.error("PostgreSQL Pool: Atomic file synchronization failed:", e);
     }
   }
-
 
   public getTelemetryStats(): TelemetryStats {
     const usage = process.memoryUsage();

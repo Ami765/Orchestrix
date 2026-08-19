@@ -10,12 +10,17 @@ export default function KnowledgeBase() {
   const [showAddSource, setShowAddSource] = useState(false);
   const [newSourceName, setNewSourceName] = useState("");
   const [newSourceContent, setNewSourceContent] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
 
   if (!db) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newSourceName.trim() || !newSourceContent.trim()) return;
+    setFormError(null);
+    if (!newSourceName.trim() || !newSourceContent.trim()) {
+      setFormError("Both source name and text body are required.");
+      return;
+    }
 
     try {
       await addKnowledge(newSourceName, newSourceContent);
@@ -24,7 +29,7 @@ export default function KnowledgeBase() {
       setShowAddSource(false);
     } catch (err) {
       console.error("Failed to add knowledge:", err);
-      alert("Error ingesting knowledge source.");
+      setFormError("Error ingesting knowledge source. Please try again.");
     }
   };
 
@@ -48,6 +53,12 @@ export default function KnowledgeBase() {
       {showAddSource && (
         <form onSubmit={handleSubmit} className="bg-[#131826] border border-white/10 rounded-xl p-5 space-y-4 max-w-xl shadow-2xl">
           <h3 className="text-sm font-bold text-white font-display">Ingest New Knowledge Source</h3>
+          
+          {formError && (
+            <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs px-3 py-2 rounded-lg">
+              ⚠️ {formError}
+            </div>
+          )}
           
           <div className="space-y-1">
             <label className="text-xs text-gray-300 font-semibold">Source Record Name</label>

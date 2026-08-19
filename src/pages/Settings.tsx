@@ -35,6 +35,8 @@ export default function Settings() {
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationMessage, setVerificationMessage] = useState<any>(null);
   const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [settingsSuccess, setSettingsSuccess] = useState<string | null>(null);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
 
   // Setup fields
   const [provider, setProvider] = useState<"smtp" | "simulator">("simulator");
@@ -83,6 +85,8 @@ export default function Settings() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSettingsSuccess(null);
+    setSettingsError(null);
     try {
       await saveSettings(
         {
@@ -95,15 +99,17 @@ export default function Settings() {
           defaultWorkflow: settingsForm.defaultWorkflow,
         }
       );
-      alert("Settings updated successfully!");
+      setSettingsSuccess("Settings updated successfully!");
     } catch (err) {
       console.error("Failed to save settings:", err);
-      alert("Failed to save settings.");
+      setSettingsError("Failed to save settings.");
     }
   };
 
   const handleSaveEmailConfig = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSettingsSuccess(null);
+    setSettingsError(null);
     try {
       await VerificationService.saveConfig({
         provider,
@@ -115,10 +121,10 @@ export default function Settings() {
         subjectTemplate,
         bodyTemplate
       });
-      alert("Email verification configuration saved successfully!");
+      setSettingsSuccess("Email verification configuration saved successfully!");
       await loadVerificationConfig();
     } catch (err: any) {
-      alert("Failed to save email config: " + err.message);
+      setSettingsError("Failed to save email config: " + err.message);
     }
   };
 
@@ -150,7 +156,7 @@ export default function Settings() {
       setVerificationError(null);
       const res = await VerificationService.verifyCode(verificationCode);
       if (res.success) {
-        alert(res.message);
+        setSettingsSuccess(res.message);
         setVerificationCode("");
         setVerificationMessage(null);
         await loadVerificationConfig();
@@ -171,6 +177,36 @@ export default function Settings() {
         <h1 className="text-xl font-display font-bold text-white">System Settings</h1>
         <p className="text-xs text-gray-400 mt-1">Manage profile properties, workspace defaults, connected models, and email verification gateways.</p>
       </div>
+
+      {settingsSuccess && (
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-4 py-3 rounded-xl flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{settingsSuccess}</span>
+          </div>
+          <button 
+            onClick={() => setSettingsSuccess(null)}
+            className="text-gray-400 hover:text-white font-bold ml-4 cursor-pointer text-xs"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {settingsError && (
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs px-4 py-3 rounded-xl flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+            <span>{settingsError}</span>
+          </div>
+          <button 
+            onClick={() => setSettingsError(null)}
+            className="text-gray-400 hover:text-white font-bold ml-4 cursor-pointer text-xs"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left sidebar tabs */}

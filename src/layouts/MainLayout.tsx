@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   Activity,
@@ -15,9 +15,14 @@ import {
   Sun,
   Layers,
   X,
-  Sparkles
+  Sparkles,
+  Download,
+  CheckCircle,
+  FileDown
 } from "lucide-react";
 import { useWorkspaceStore, useUIStore, useThemeStore } from "../store";
+import { downloadReportAsFile } from "../utils/reportDownloader";
+import DocumentPreview from "../components/DocumentPreview";
 
 export default function MainLayout() {
   const navigate = useNavigate();
@@ -44,6 +49,36 @@ export default function MainLayout() {
     clearNotifications,
     resetDemoState,
   } = useWorkspaceStore();
+
+  const [justCompletedReport, setJustCompletedReport] = useState<any | null>(null);
+  const prevRunningIdRef = useRef<string | null>(null);
+
+  // Monitor when an active analysis completes
+  useEffect(() => {
+    if (!db) return;
+    
+    // Find active running analysis
+    const activeRun = db.analyses.find(a => a.status === "running");
+    
+    if (activeRun) {
+      // Store current running analysis ID
+      prevRunningIdRef.current = activeRun.id;
+    } else if (prevRunningIdRef.current) {
+      // We had a running analysis, but now there is no active run. It must have finished!
+      const finishedId = prevRunningIdRef.current;
+      prevRunningIdRef.current = null; // reset ref
+      
+      const finishedAnalysis = db.analyses.find(a => a.id === finishedId);
+      if (finishedAnalysis && finishedAnalysis.status === "completed") {
+        // Retrieve the completed report
+        const matchingReport = db.reports.find(r => r.analysisId === finishedId);
+        if (matchingReport) {
+          // Trigger the beautiful completion dialog!
+          setJustCompletedReport(matchingReport);
+        }
+      }
+    }
+  }, [db]);
 
   // Initialize and synchronize global states on mount
   useEffect(() => {
@@ -335,33 +370,15 @@ export default function MainLayout() {
             </nav>
 
             <div className="flex flex-col gap-3 pt-4 border-t border-slate-800/40">
-              <div className="bg-slate-800/40 rounded-lg p-3 text-xs border border-white/5">
-                <div className="flex justify-between mb-1">
-                  <span className="text-xs text-slate-400">Server CPU Load</span>
-                  <span className="text-xs text-cyan-400 font-mono">{telemetry ? `${telemetry.cpu}%` : "Loading..."}</span>
+              <div className="bg-emerald-950/20 rounded-xl p-3 text-xs border border-emerald-500/10 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide">SYSTEM OPERATIONAL</span>
                 </div>
-                <div className="w-full bg-slate-700/50 h-1 rounded-full">
-                  <div 
-                    className="bg-cyan-400 h-1 rounded-full transition-all duration-1000"
-                    style={{ width: telemetry ? `${Math.min(100, Math.max(5, telemetry.cpu))}%` : "42%" }}
-                  />
-                </div>
-                <div className="flex justify-between mt-2 mb-1">
-                  <span className="text-[10px] text-slate-500">Heap Allocation</span>
-                  <span className="text-[10px] text-violet-400 font-mono">{telemetry ? `${telemetry.memory} MB` : "Checking..."}</span>
-                </div>
+                <p className="text-[11px] text-slate-400 leading-normal">
+                  All compliance & diligence pipelines active. Verified nodes fully synchronized.
+                </p>
               </div>
-
-              <button 
-                onClick={() => {
-                  if (confirm("Reset application to standard demo parameters? This will clear new runs.")) {
-                    resetDemoState();
-                  }
-                }}
-                className="w-full text-left text-[10px] font-mono text-slate-400 hover:text-white py-1 px-3 border border-dashed border-slate-800 hover:border-slate-700 rounded-md transition-all cursor-pointer"
-              >
-                ⚙ RESET DEMO REGS
-              </button>
 
               <div className="text-[11px] font-mono text-slate-400 px-3 flex items-center gap-2 select-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -440,49 +457,10 @@ export default function MainLayout() {
 
       {/* ==================== DETAIL MODAL: READ EXECUTIVE REPORT ==================== */}
       {selectedReport && (
-        <div className="fixed inset-0 bg-[#0A0D16]/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-          <div className="bg-[#131826] border border-white/10 rounded-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto shadow-2xl p-6 relative">
-            <button 
-              onClick={() => setSelectedReport(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-gray-400 hover:text-white transition-all cursor-pointer shadow-sm"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-semibold ${
-                  selectedReport.riskRating === "High"
-                    ? "bg-rose-500/10 border-rose-500/20 text-rose-400"
-                    : selectedReport.riskRating === "Moderate"
-                    ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
-                    : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                }`}>
-                  {selectedReport.riskRating} Risk Outcome
-                </span>
-                <span className="text-[10px] text-gray-400 font-mono">Date Compiled: {selectedReport.date}</span>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-display font-bold text-white tracking-tight">{selectedReport.company}</h2>
-                <div className="text-xs text-indigo-400 font-mono font-medium">{selectedReport.title}</div>
-              </div>
-
-              <div className="bg-[#0A0D16] border border-white/10 rounded-xl p-4 text-xs text-gray-200 leading-relaxed text-justify space-y-3">
-                <p className="font-sans leading-relaxed">{selectedReport.text}</p>
-              </div>
-
-              <div className="flex gap-2 justify-end pt-4 border-t border-white/5">
-                <button 
-                  onClick={() => setSelectedReport(null)}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white rounded-lg select-none transition-all cursor-pointer"
-                >
-                  Dismiss Report File
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DocumentPreview 
+          report={selectedReport} 
+          onClose={() => setSelectedReport(null)} 
+        />
       )}
 
       {/* ==================== DETAIL MODAL: INSPECT STAGES ==================== */}
@@ -525,6 +503,110 @@ export default function MainLayout() {
                   Close Inspect Logs
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== EVENT MODAL: AGENT SWARM PIPELINE COMPLETED ==================== */}
+      {justCompletedReport && (
+        <div className="fixed inset-0 bg-[#0A0D16]/90 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#131826] border-2 border-emerald-500/30 rounded-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto shadow-[0_0_50px_rgba(16,185,129,0.15)] p-6 relative">
+            
+            <button 
+              onClick={() => setJustCompletedReport(null)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 text-gray-400 hover:text-white transition-all cursor-pointer shadow-sm"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                  <CheckCircle className="w-6 h-6 animate-bounce" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-emerald-400 font-mono tracking-wider uppercase">SWARM PIPELINE COMPLETE</h3>
+                  <p className="text-xs text-gray-400">Multi-agent compliance & diligence synthesis finished successfully.</p>
+                </div>
+              </div>
+
+              <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-lg font-display font-bold text-white tracking-tight">{justCompletedReport.company}</h2>
+                    <div className="text-xs text-indigo-400 font-mono font-medium">{justCompletedReport.title}</div>
+                  </div>
+                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-semibold ${
+                    justCompletedReport.riskRating === "High"
+                      ? "bg-rose-500/10 border-rose-500/20 text-rose-400"
+                      : justCompletedReport.riskRating === "Moderate"
+                      ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                      : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                  }`}>
+                    {justCompletedReport.riskRating} Risk Outcome
+                  </span>
+                </div>
+                
+                <div className="bg-[#0A0D16]/80 border border-white/5 rounded-lg p-3 max-h-48 overflow-y-auto">
+                  <p className="text-xs text-gray-300 leading-relaxed font-sans">{justCompletedReport.text}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider">DIRECT DOWNLOAD & VIEW CHANNELS</div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <button 
+                    onClick={() => downloadReportAsFile(justCompletedReport, "txt")}
+                    className="px-3 py-2.5 bg-white/5 hover:bg-indigo-600/20 border border-white/10 rounded-xl text-xs font-mono font-bold text-white transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <Download className="w-3.5 h-3.5 text-indigo-400" />
+                    Plain Text (.txt)
+                  </button>
+                  <button 
+                    onClick={() => downloadReportAsFile(justCompletedReport, "md")}
+                    className="px-3 py-2.5 bg-white/5 hover:bg-violet-600/20 border border-white/10 rounded-xl text-xs font-mono font-bold text-white transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <Download className="w-3.5 h-3.5 text-violet-400" />
+                    Markdown (.md)
+                  </button>
+                  <button 
+                    onClick={() => downloadReportAsFile(justCompletedReport, "pdf")}
+                    className="px-3 py-2.5 bg-white/5 hover:bg-cyan-600/20 border border-white/10 rounded-xl text-xs font-mono font-bold text-white transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <FileDown className="w-3.5 h-3.5 text-cyan-400" />
+                    Print PDF (.pdf)
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-end pt-3 border-t border-white/5">
+                <button 
+                  onClick={() => {
+                    setSelectedReport(justCompletedReport);
+                    setJustCompletedReport(null);
+                  }}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white rounded-lg select-none transition-all cursor-pointer shadow-[0_4px_12px_rgba(99,102,241,0.3)] flex items-center justify-center gap-1.5"
+                >
+                  <FileText className="w-4 h-4" /> Open Document Preview
+                </button>
+                <button 
+                  onClick={() => {
+                    setJustCompletedReport(null);
+                    navigate("/reports");
+                  }}
+                  className="px-4 py-2 bg-[#131826] hover:bg-white/5 border border-white/10 text-xs font-semibold text-white rounded-lg select-none transition-all cursor-pointer"
+                >
+                  Go to Diligence Hub
+                </button>
+                <button 
+                  onClick={() => setJustCompletedReport(null)}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white rounded-lg select-none transition-all cursor-pointer shadow-[0_4px_12px_rgba(16,185,129,0.3)]"
+                >
+                  Dismiss
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
