@@ -66,14 +66,26 @@ export async function startServer() {
 
   const httpServer = http.createServer(app);
 
-  // Set up WebSocket server on the same HTTP server
-  const wss = new WebSocketServer({ server: httpServer });
-  setupLiveWS(wss);
+//   // Set up WebSocket server on the same HTTP server
+//   const wss = new WebSocketServer({ server: httpServer });
+//   setupLiveWS(wss);
 
-  httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(`[Express Server] Architecture boot complete. Listening on port ${PORT}`);
-  });
-}
+//   httpServer.listen(PORT, "0.0.0.0", () => {
+//     console.log(`[Express Server] Architecture boot complete. Listening on port ${PORT}`);
+//   });
+// }
+// ONLY initialize WebSockets if NOT running on Vercel
+  if (!process.env.VERCEL) {
+    const wss = new WebSocketServer({ server: httpServer });
+    setupLiveWS(wss);
+    
+    httpServer.listen(PORT, "0.0.0.0", () => {
+      console.log(`[Express Server] Architecture boot complete with WebSockets. Listening on port ${PORT}`);
+    });
+  } else {
+    // Fallback for non-serverless environments if startServer is called
+    console.log("[Express Server] Running in Serverless mode. Skipping WebSocket initialization.");
+  }
 
 
 
@@ -145,4 +157,4 @@ export async function startServer() {
 //   httpServer.listen(PORT, "0.0.0.0", () => {
 //     console.log(`[Express Server] Multi-tiered architecture boot complete with WebSockets. Listening on 0.0.0.0:${PORT}`);
 //   });
-// }
+}
