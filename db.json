@@ -1,6 +1,175 @@
 {
   "analyses": [
     {
+      "id": "an-1783605074225",
+      "title": "Analysis Run — Jul 9",
+      "workflowId": "wf-1",
+      "workflowName": "Full diligence review",
+      "status": "completed",
+      "createdAt": "2026-07-09T13:51:14.225Z",
+      "riskRating": "High",
+      "currentStageIndex": 5,
+      "sourceText": "File contents of uploaded items: AcmeCloud_Vendor_Security_Assessment_2026.docx. Standard financial leverage of 3.8x, Q2 growth rate targets met. Steady revenue.",
+      "stages": [
+        {
+          "name": "Document Parsing",
+          "status": "completed",
+          "agent": "Document Parser",
+          "result": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.115)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction."
+        },
+        {
+          "name": "Financial Review",
+          "status": "completed",
+          "agent": "Financial Reviewer",
+          "result": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x."
+        },
+        {
+          "name": "Risk Assessment",
+          "status": "completed",
+          "agent": "Risk Assessor",
+          "result": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics."
+        },
+        {
+          "name": "Compliance Audit Check",
+          "status": "completed",
+          "agent": "Compliance Officer",
+          "result": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines."
+        },
+        {
+          "name": "Executive Summary",
+          "status": "completed",
+          "agent": "Decision Summarizer",
+          "result": "[DS NODE] Generated final underwriting consensus report. Outstanding risks analyzed; credit risk exposure guidelines are satisfied under standard monitoring controls."
+        }
+      ],
+      "agentOutputs": {
+        "Document Parser": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.115)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction.",
+        "Financial Reviewer": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x.",
+        "Compliance Officer": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics.",
+        "Risk Assessor": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines.",
+        "Decision Summarizer": "[DS NODE] Generated final underwriting consensus report. Outstanding risks analyzed; credit risk exposure guidelines are satisfied under standard monitoring controls."
+      },
+      "reportId": "rep-1783605089417"
+    },
+    {
+      "id": "an-1783604758960",
+      "title": "Analysis Run — Jul 9",
+      "workflowId": "wf-2",
+      "workflowName": "Vendor risk scan",
+      "status": "completed",
+      "createdAt": "2026-07-09T13:45:58.960Z",
+      "riskRating": "Low",
+      "currentStageIndex": 2,
+      "sourceText": "File contents of uploaded items: AcmeCloud_Vendor_Security_Assessment_2026.docx. Standard financial leverage of 3.8x, Q2 growth rate targets met. Steady revenue.",
+      "stages": [
+        {
+          "name": "Contract Validation",
+          "status": "completed",
+          "agent": "Contract Validator",
+          "result": "[CV NODE] Section-by-section contract auditing finished. auto-renewal clause identified in Section 14 with absent rate cap restrictions."
+        },
+        {
+          "name": "Risk Assessment",
+          "status": "completed",
+          "agent": "Risk Assessor",
+          "result": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines."
+        }
+      ],
+      "agentOutputs": {
+        "Contract Validator": "[CV NODE] Section-by-section contract auditing finished. auto-renewal clause identified in Section 14 with absent rate cap restrictions.",
+        "Risk Assessor": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines."
+      },
+      "reportId": "rep-1783604763525"
+    },
+    {
+      "id": "an-1783604579388",
+      "title": "Analysis Run — Jul 9",
+      "workflowId": "wf-3",
+      "workflowName": "Covenant compliance check",
+      "status": "completed",
+      "createdAt": "2026-07-09T13:42:59.388Z",
+      "riskRating": "Low",
+      "currentStageIndex": 3,
+      "sourceText": "File contents of uploaded items: meridian_q2_statements.pdf. Standard financial leverage of 3.8x, Q2 growth rate targets met. Steady revenue.",
+      "stages": [
+        {
+          "name": "Document Parsing",
+          "status": "completed",
+          "agent": "Document Parser",
+          "result": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.106)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction."
+        },
+        {
+          "name": "Financial Review",
+          "status": "completed",
+          "agent": "Financial Reviewer",
+          "result": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x."
+        },
+        {
+          "name": "Compliance Check",
+          "status": "completed",
+          "agent": "Compliance Officer",
+          "result": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics."
+        }
+      ],
+      "agentOutputs": {
+        "Document Parser": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.106)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction.",
+        "Financial Reviewer": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x.",
+        "Compliance Officer": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics."
+      },
+      "reportId": "rep-1783604583965"
+    },
+    {
+      "id": "an-1783604529390",
+      "title": "Analysis Run — Jul 9",
+      "workflowId": "wf-1",
+      "workflowName": "Full diligence review",
+      "status": "completed",
+      "createdAt": "2026-07-09T13:42:09.390Z",
+      "riskRating": "High",
+      "currentStageIndex": 5,
+      "sourceText": "File contents of uploaded items: meridian_q2_statements.pdf, vendor_contracts_clause.xlsx, AcmeCloud_Vendor_Security_Assessment_2026.docx. Standard financial leverage of 3.8x, Q2 growth rate targets met. Steady revenue.",
+      "stages": [
+        {
+          "name": "Document Parsing",
+          "status": "completed",
+          "agent": "Document Parser",
+          "result": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.106)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction."
+        },
+        {
+          "name": "Financial Review",
+          "status": "completed",
+          "agent": "Financial Reviewer",
+          "result": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x."
+        },
+        {
+          "name": "Risk Assessment",
+          "status": "completed",
+          "agent": "Risk Assessor",
+          "result": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics."
+        },
+        {
+          "name": "Compliance Audit Check",
+          "status": "completed",
+          "agent": "Compliance Officer",
+          "result": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines."
+        },
+        {
+          "name": "Executive Summary",
+          "status": "completed",
+          "agent": "Decision Summarizer",
+          "result": "[DS NODE] Generated final underwriting consensus report. Outstanding risks analyzed; credit risk exposure guidelines are satisfied under standard monitoring controls."
+        }
+      ],
+      "agentOutputs": {
+        "Document Parser": "[DP NODE] Successfully parsed entity covenants from input text: \"[KNOWLEDGE BASE REFERENCE - SOURCE: Orchestrix Underwriting Rules v4 (SIMILARITY: 0.106)]\nUnderwriting standard constraints: Maximum allowed leverage ...\". Structured leverage definitions & compliance criteria extraction.",
+        "Financial Reviewer": "[FR NODE] Performed financial health evaluation. Verified operational leverage at 5.2x (violating covenant target of 4.0x). DSCR remains stable at 1.45x.",
+        "Compliance Officer": "[CO NODE] Executed compliance covenants mapping. Mandated secondary waiver template provisions with senior collateral oversight metrics.",
+        "Risk Assessor": "[RA NODE] Risk factor verification complete. Financial leverage breaches flagged. Risk status determined as LOW RISK due to capital guidelines.",
+        "Decision Summarizer": "[DS NODE] Generated final underwriting consensus report. Outstanding risks analyzed; credit risk exposure guidelines are satisfied under standard monitoring controls."
+      },
+      "reportId": "rep-1783604544576"
+    },
+    {
       "id": "an-1",
       "title": "Meridian Capital — Q2 diligence",
       "workflowId": "wf-1",
@@ -126,8 +295,8 @@
       "code": "DP",
       "role": "Extracts structured data",
       "status": "idle",
-      "runtime": "0:00",
-      "lastTask": "Meridian Capital",
+      "runtime": "1.50",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-indigo-500",
       "textcolor": "text-indigo-400"
     },
@@ -137,8 +306,8 @@
       "code": "FR",
       "role": "Analyzes statements & ratios",
       "status": "idle",
-      "runtime": "1:48",
-      "lastTask": "Alderbrook Trust",
+      "runtime": "2.50",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-violet-500",
       "textcolor": "text-violet-400"
     },
@@ -148,8 +317,8 @@
       "code": "RA",
       "role": "Flags anomalies and exposure",
       "status": "idle",
-      "runtime": "0:52",
-      "lastTask": "Alderbrook Trust",
+      "runtime": "1.50",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-red-500",
       "textcolor": "text-red-400"
     },
@@ -159,8 +328,8 @@
       "code": "DS",
       "role": "Drafts the executive summary",
       "status": "idle",
-      "runtime": "—",
-      "lastTask": "Meridian Capital",
+      "runtime": "NaN",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-emerald-500",
       "textcolor": "text-emerald-400"
     },
@@ -170,8 +339,8 @@
       "code": "CV",
       "role": "Checks clauses against policy",
       "status": "idle",
-      "runtime": "2:11",
-      "lastTask": "Northgate Holdings",
+      "runtime": "2.50",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-cyan-500",
       "textcolor": "text-cyan-400"
     },
@@ -181,8 +350,8 @@
       "code": "CO",
       "role": "Cross-checks regulatory rules",
       "status": "idle",
-      "runtime": "0:00",
-      "lastTask": "Coastal Freight Co.",
+      "runtime": "1.50",
+      "lastTask": "Analysis Run — Jul 9",
       "color": "bg-rose-500",
       "textcolor": "text-rose-400"
     }
@@ -239,6 +408,46 @@
   ],
   "reports": [
     {
+      "id": "rep-1783605089417",
+      "title": "Analysis Run — Jul 9 Report",
+      "company": "Analysis Run",
+      "analysisId": "an-1783605074225",
+      "date": "Jul 9, 2026",
+      "text": "Consolidated system underwrite. Evaluated operational margins, compliance covenants, and business risks. Determined overall risk profile to be HIGH. Standard monitoring recommendations apply.",
+      "riskRating": "High",
+      "status": "Completed"
+    },
+    {
+      "id": "rep-1783604763525",
+      "title": "Analysis Run — Jul 9 Report",
+      "company": "Analysis Run",
+      "analysisId": "an-1783604758960",
+      "date": "Jul 9, 2026",
+      "text": "Consolidated system underwrite. Evaluated operational margins, compliance covenants, and business risks. Determined overall risk profile to be LOW. Standard monitoring recommendations apply.",
+      "riskRating": "Low",
+      "status": "Completed"
+    },
+    {
+      "id": "rep-1783604583965",
+      "title": "Analysis Run — Jul 9 Report",
+      "company": "Analysis Run",
+      "analysisId": "an-1783604579388",
+      "date": "Jul 9, 2026",
+      "text": "Consolidated system underwrite. Evaluated operational margins, compliance covenants, and business risks. Determined overall risk profile to be LOW. Standard monitoring recommendations apply.",
+      "riskRating": "Low",
+      "status": "Completed"
+    },
+    {
+      "id": "rep-1783604544576",
+      "title": "Analysis Run — Jul 9 Report",
+      "company": "Analysis Run",
+      "analysisId": "an-1783604529390",
+      "date": "Jul 9, 2026",
+      "text": "Consolidated system underwrite. Evaluated operational margins, compliance covenants, and business risks. Determined overall risk profile to be HIGH. Standard monitoring recommendations apply.",
+      "riskRating": "High",
+      "status": "Completed"
+    },
+    {
       "id": "rep-1",
       "title": "Meridian Capital Diligence Report",
       "company": "Meridian Capital",
@@ -288,6 +497,42 @@
     }
   ],
   "notifications": [
+    {
+      "id": "nt-1783605074231",
+      "text": "Swarm dispatched for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "info"
+    },
+    {
+      "id": "nt-1783604758964",
+      "text": "Swarm dispatched for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "info"
+    },
+    {
+      "id": "nt-1783604583973",
+      "text": "Analysis completed successfully for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "success"
+    },
+    {
+      "id": "nt-1783604579392",
+      "text": "Swarm dispatched for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "info"
+    },
+    {
+      "id": "nt-1783604544585",
+      "text": "Analysis completed successfully for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "success"
+    },
+    {
+      "id": "nt-1783604529396",
+      "text": "Swarm dispatched for Analysis Run — Jul 9.",
+      "time": "Just now",
+      "type": "info"
+    },
     {
       "id": "nt-1",
       "text": "Analysis completed for Meridian Capital.",
