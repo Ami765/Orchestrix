@@ -14,7 +14,7 @@ import { AIHubRouter } from "./api/routers/AIHubRouter";
 import { VerificationRouter } from "./api/routers/VerificationRouter";
 import { setupLiveWS } from "./api/websockets/liveWS";
 
-const app = express();
+export const app = express();
 const PORT = 3000;
 
 app.use(express.json({ limit: "50mb" }));
