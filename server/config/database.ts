@@ -22,19 +22,36 @@ export class PostgreSQLPool {
     return PostgreSQLPool.instance;
   }
 
+  // private connect() {
+  //   if (fs.existsSync(DB_FILE)) {
+  //     try {
+  //       const data = fs.readFileSync(DB_FILE, "utf-8");
+  //       this.memoryDb = JSON.parse(data);
+  //       console.log("PostgreSQL Pool: Successfully connected to persistent data store (db.json)");
+  //       return;
+  //     } catch (e) {
+  //       console.error("PostgreSQL Pool: Connection failure, corrupt DB file, restoring defaults.", e);
+  //     }
+  //   }
+  //   this.seedDefaults();
+  // }  
   private connect() {
-    if (fs.existsSync(DB_FILE)) {
-      try {
+    try {
+      if (fs.existsSync(DB_FILE)) {
         const data = fs.readFileSync(DB_FILE, "utf-8");
         this.memoryDb = JSON.parse(data);
         console.log("PostgreSQL Pool: Successfully connected to persistent data store (db.json)");
         return;
-      } catch (e) {
-        console.error("PostgreSQL Pool: Connection failure, corrupt DB file, restoring defaults.", e);
       }
+    } catch (e) {
+      console.error("PostgreSQL Pool: Connection failure or missing DB file on cloud environment. Restoring defaults.", e);
     }
+    
+    // Force seeding if file read fails or doesn't exist in the Vercel path environment
+    console.log("PostgreSQL Pool: Seeding fallback database defaults for cloud session.");
     this.seedDefaults();
   }
+
 
   public get db(): DatabaseSchema {
     return this.memoryDb;
