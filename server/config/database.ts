@@ -124,7 +124,21 @@ export class PostgreSQLPool {
     }
   }
 
-  public save() {
+  // public save() {
+  //   try {
+  //     const tmpFile = `${DB_FILE}.tmp`;
+  //     fs.writeFileSync(tmpFile, JSON.stringify(this.memoryDb, null, 2), "utf-8");
+  //     fs.renameSync(tmpFile, DB_FILE);
+  //   } catch (e) {
+  //     console.error("PostgreSQL Pool: Atomic file synchronization failed:", e);
+  //   }
+  // }
+    public save() {
+    if (process.env.VERCEL) {
+      console.log("PostgreSQL Pool: Running on Vercel, bypassing local file sync.");
+      return;
+    }
+
     try {
       const tmpFile = `${DB_FILE}.tmp`;
       fs.writeFileSync(tmpFile, JSON.stringify(this.memoryDb, null, 2), "utf-8");
@@ -133,6 +147,7 @@ export class PostgreSQLPool {
       console.error("PostgreSQL Pool: Atomic file synchronization failed:", e);
     }
   }
+
 
   public getTelemetryStats(): TelemetryStats {
     const usage = process.memoryUsage();
